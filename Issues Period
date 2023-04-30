@@ -11,31 +11,3 @@ VAR _todaystart = DATE(_year;_month;_day) + TIME(0; 0; 0)
     ADDCOLUMNS(FILTER(Issues;[CREATED]<_todaystart-30);                               "Period";">30";   "Order";"30 napnál több")
     )
 RETURN SELECTCOLUMNS (_info; "Period"; [Period]; "Order";[Order]; "Issue_ID";[ISSUE_ID]; "CreateDate";[CREATED])
-
-# Issues Period more options
-
-Issues_Period = 
-VAR _year  = YEAR (MAX(Issues[CREATED]))
-VAR _month = MONTH(MAX(Issues[CREATED]))
-VAR _day   = DAY  (MAX(Issues[CREATED]))
-VAR _todaystart     = DATE(_year;_month;_day) + TIME(0; 0; 0)
-VAR _thismonthstart = DATE(_year;_month;1)
-VAR _thisyearstart  = DATE(_year;1;1)
-VAR _thisquarterstart = DATE(_year;
-                            SWITCH(true();
-                                _month>9;10;
-                                _month>6;7;
-                                _month>3;4;
-                            1);1)
- VAR _info = UNION(
-    ADDCOLUMNS(FILTER(Issues;[CREATED]>_todaystart);                              "Period";"Mai nap";            "Order";1);
-    ADDCOLUMNS(FILTER(Issues;AND([CREATED]>_todaystart-1;[CREATED]<_todaystart)); "Period";"Tegnap";             "Order";2);
-    ADDCOLUMNS(FILTER(Issues;[CREATED]>_todaystart-7);                            "Period";"Utolsó 7 Nap";       "Order";3);
-    ADDCOLUMNS(FILTER(Issues;[CREATED]>_todaystart-30);                           "Period";"Utolsó 30 Nap";      "Order";4);
-    ADDCOLUMNS(FILTER(Issues;[CREATED]>_todaystart-90);                           "Period";"Utolsó 90 Nap";      "Order";5);
-    ADDCOLUMNS(FILTER(Issues;[CREATED]>=_thismonthstart);                         "Period";"Ez a hónap";         "Order";6);
-    ADDCOLUMNS(FILTER(Issues;[CREATED]>=_thisquarterstart);                       "Period";"Ez a negyedév";      "Order";7);
-    ADDCOLUMNS(FILTER(Issues;[CREATED]>=_thisyearstart);                          "Period";"Ez az év";           "Order";8);
-    ADDCOLUMNS(Issues;                                                            "Period";"Egyéni beállítás...";"Order";9)
-    )
-RETURN SELECTCOLUMNS (_info; "Period"; [Period]; "Order";[Order]; "Issue_ID";[ISSUE_ID]; "CreateDate";[CREATED])
