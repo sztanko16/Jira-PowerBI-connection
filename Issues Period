@@ -5,9 +5,9 @@ VAR _day   = DAY  (MAX(Issues[CREATED]))
 VAR _todaystart = DATE(_year;_month;_day) + TIME(0; 0; 0)
 
  VAR _info = UNION(
-    ADDCOLUMNS(FILTER(Issues;[CREATED]>_todaystart-6);                                "Period";"<7";    "Order";"7 napnál kevesebb");
-    ADDCOLUMNS(FILTER(Issues;AND([CREATED]>_todaystart-13;[CREATED]<_todaystart-6));  "Period";"<14";   "Order";"14 napnál kevesebb");
-    ADDCOLUMNS(FILTER(Issues;AND([CREATED]>_todaystart-30;[CREATED]<_todaystart-13)); "Period";"<30";   "Order";"30 napnál kevesebb");
-    ADDCOLUMNS(FILTER(Issues;[CREATED]<_todaystart-30);                               "Period";">30";   "Order";"30 napnál több")
+    ADDCOLUMNS(FILTER(Issues;[CREATED]>_todaystart-6);                                "Period";"<7";    "Order";1; "NOTE";"7 napnál kevesebb");
+    ADDCOLUMNS(FILTER(Issues;AND([CREATED]>_todaystart-13;[CREATED]<_todaystart-6));  "Period";"<14";   "Order";2; "NOTE";"14 napnál kevesebb");
+    ADDCOLUMNS(FILTER(Issues;AND([CREATED]>_todaystart-30;[CREATED]<_todaystart-13)); "Period";"<30";   "Order";3; "NOTE";"30 napnál kevesebb");
+    ADDCOLUMNS(FILTER(Issues;[CREATED]<_todaystart-30);                               "Period";">30";   "Order";4; "NOTE";"30 napnál több")
     )
-RETURN SELECTCOLUMNS (_info; "Period"; [Period]; "Order";[Order]; "Issue_ID";[ISSUE_ID]; "CreateDate";[CREATED])
+RETURN SELECTCOLUMNS (_info; "Period"; [Period]; "Order";[Order]; "Issue_ID";[ISSUE_ID]; "Note";[NOTE]; "CreateDate";[CREATED])
